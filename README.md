@@ -18,7 +18,7 @@ Of course TailwindCss is always present (see [instructions](https://tailwindcss.
 
 ## 2 - Outlet and Router
 
-- Install the router (`npm i react-router-dom@6`) and configure as previous projects. Define `pages` and `components`, add `Header` and `Footer` to components, and `Home`, `Login`, `Protected`, and `Welcome` to pages. The homepage and the protected pages cannot be accessed without authentication, while both the login and the Welcome page are public. Thanks to the **Outlet** we can protect a lot of pages in a single definition.  
+- Install the router (`npm i react-router-dom@6`) and configure as previous projects. Define `pages` and `components`, add `Header` and `Footer` to components, and `Home`, `Login`, `Protected`, and `Welcome` to pages. The homepage and the protected pages cannot be accessed without authentication, while both the login and the Welcome page are public. Thanks to the [**Outlet**](https://reactrouter.com/docs/en/v6/components/outlet) we can protect a lot of pages in a single definition.  
 
 
 ## 3 - server side API for authentication
