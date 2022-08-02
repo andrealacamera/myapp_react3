@@ -20,34 +20,58 @@ Of course TailwindCss is always present (see [instructions](https://tailwindcss.
 
 - Install the router (`npm i react-router-dom@6`) and configure as previous projects. Define `pages` and `components`, add `Header` and `Footer` to components, and `Home`, `Login`, `Protected`, and `Welcome` to pages. The homepage and the protected pages cannot be accessed without authentication, while both the login and the Welcome page are public. 
 
-- Thanks to [**Outlets**](https://reactrouter.com/docs/en/v6/components/outlet) we can protect a lot of pages in a single definition.  Define a new component `Guard.jsx` with auth hook (see section 4, meanwhile you can set to `false` or `true` and simulate the two ways). 
+- Thanks to [**Outlets**](https://reactrouter.com/docs/en/v6/components/outlet) we can protect a lot of pages in a single definition.  Define a new component `Guard.jsx` with auth hook (see section 4, meanwhile you can set to `null` or `andrea` and simulate the two different situations). Here we put both `Home` and `Protected` within `Guard`, 
 ```js
 import { Navigate, Outlet } from 'react-router-dom'
-//define by hand the auth object
-return auth.user ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/login" />
-  )
+//define by hand the auth object. E.g. 
+// const auth = {
+//  user: null
+//}
+return auth.user ? ( <Outlet /> ) : ( <Navigate to='/login' /> )
 ...
 ``` 
 
-- Add Routes and Route to `App.jsx`
+- Add Routes and Route to `App.jsx` ()
 ```js
-  <Header />
-  <div className="flex-grow">
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/welcome" element={<Welcome />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/protected' element={<Protected />} />
-    </Routes>
+  <div className='flex flex-col min-h-screen'>
+    <Header />
+    <div className="flex-grow">
+      <Routes>
+        <Route path="/" element={ <Guard /> }>
+          <Route index element={ <Home /> } />
+          <Route path='protected' element={ <Protected /> } />
+        </Route>
+        <Route path='/login' element={ <Login /> } />
+        <Route path="/welcome" element={ <Welcome /> } />
+      </Routes>
+    </div>
+    <Footer />
   </div>
-  <Footer />
 ```
 
 ## 3 - server side API for authentication
 
+- Define `server.cjs` (because of package.json definition of "type": "module") with a basic example of `express` server.
+```js
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/api', (req, res) => {
+  res.status(200).json({
+    message: "Hello API!"
+  })
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
+```
+
+- Add a `POST` for endpoint `/api/login` that returns the JWT token (fake or not) if the payload matches with a registered user. The API sets also a cookie with the token.
+In the application, I defined a fake user (see above) and the API returns a fake token.
+
+- launch the server part with `npm run server` (see definition on package.json).
 
 ## 4 - Redux store (RTK Query)
 

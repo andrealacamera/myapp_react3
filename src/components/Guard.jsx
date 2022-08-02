@@ -6,7 +6,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 const Guard = () => {
   
   const auth = {
-    user: null
+    user: "andrea"
   }
 
   return auth.user ? ( <Outlet /> ) : ( <Navigate to='/login' /> )
