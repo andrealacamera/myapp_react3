@@ -28,7 +28,7 @@ app.post('/api/login', (req,res) => {
 });
 
 app.post('/api/logout', (req,res) => {
-  res.cookie('__jwt_token', token, {maxAge: 0, httpOnly: true});
+  res.cookie('__jwt_token', '', {maxAge: 0, httpOnly: true});
   res.status(201).json({
     message: `Goodbye!`
   })
