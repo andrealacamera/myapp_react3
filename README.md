@@ -1,6 +1,7 @@
 # myapp_react3
 
-Created on 2022-07-31 **WORK IN PROGRESS**
+Created on 2022-07-31 
+Updated on 2022-08-04
 
 
 
@@ -12,7 +13,7 @@ Of course TailwindCss is always present (see [instructions](https://tailwindcss.
 
 2. I introduced the `<Outlet>` in the Router definition, as explained in next section.
 
-3. I used a local (fake) API for authentication / server-side. Launch with `npm run server` on separated terminal. The user is `andrea` with password `12354` (yes! **1-2-3-FIVE-4** !!! ). See section 3 for details. 
+3. I used a local (fake and very basic) API for authentication / server-side. Launch with `npm run server` on separated terminal. The user is `andrea` with password `12354` (yes, **1-2-3-FIVE-4** !!! ). See section 3 for details. 
 
 4. I used an apiSlice for defining the mutations (login, logout) and a userSlice for storing the returned token (and set the user). Some hooks are defined for getting the data. See section 4 for details.
 
@@ -20,7 +21,7 @@ Of course TailwindCss is always present (see [instructions](https://tailwindcss.
 
 ## 2 - Outlet and Router
 
-- Install the router (`npm i react-router-dom@6`) and configure as in the previous projects. Define `pages` and `components`, add `Header` and `Footer` to components, and `Home`, `Login`, `Protected`, and `Welcome` to pages. The homepage and the protected pages cannot be accessed without authentication, while both the login and the Welcome page are public.
+- Install the router (`npm i react-router-dom@6`) and configure it as in the previous projects. Define `pages` and `components`, add `Header` and `Footer` to components, and `Home`, `Login`, `Protected`, and `Welcome` to pages. The homepage and the protected pages cannot be accessed without authentication, while both the login and the Welcome page are public.
 
 - Thanks to [**Outlets**](https://reactrouter.com/docs/en/v6/components/outlet) we can protect a lot of pages in a single definition.  Define a new component `Guard.jsx` with auth hook (see section 4, meanwhile you can set a `const user` to `null` or `andrea` and simulate the two different situations). For now, we put both `Home` and `Protected` within `Guard`.
 ```js
@@ -53,7 +54,7 @@ return auth.user ? ( <Outlet /> ) : ( <Navigate to='/login' /> )
 
 ## 3 - server side API for authentication
 
-- Install the package: `npm install express cors` (json-parser is included).
+- Install the packages: `npm install express cors` (json-parser is included).
 
 - Define `server.cjs` (due to package.json definition of "type": "module") with a basic example of `express` server.
 ```js
@@ -77,16 +78,15 @@ app.listen(port, () => {
 })
 ```
 
-- Add a `POST` for endpoint `/api/login` that returns the JWT token (fake or not) if the payload matches with a registered user. The API sets also a cookie with the token.
-In the application, I defined a fake user (see above) and the API returns a fake token.
+- Add a `POST` for endpoint `/api/login` that returns the JWT token (fake or not) if the payload matches with a registered user. The API sets also a cookie with the token. Add also `/api/logout` endpoint. In the application, I defined a fake user (see above) and the API returns a fake token.
 
-- launch the server part with `npm run server` (see definition on package.json).
+- launch the server part with `npm run server` (see the definition on package.json).
 
 ## 4 - Redux store (RTK Query)
 
 - Install the packages: `npm install react-redux @reduxjs/toolkit`
 
-- Add the slices: `apiSlice` and `userSlice`. The first one is used for API (hence the name), i.e. the `POST` calls for login and logout. The latter is used for storing the user data (username and token, in this example), thanks to the mutation called setCredentials. 
+- Add the slices: `apiSlice` and `userSlice`. The first one is used for API (hence the name), i.e. the `POST` calls for logging in and out. The latter is used for storing the user data (username and token, in this example), thanks to the mutation called setCredentials. 
 
 - Add the `store.js`: set the two reducers (from apiSlice and from userReducer) and the middleware for apiSlice.middleware. Note that the "standard" Slice directly exports the reducers (and separately the actions) while the apiSlice don't. 
 
@@ -94,8 +94,7 @@ In the application, I defined a fake user (see above) and the API returns a fake
 
 - Define the hook `useAuth` for getting the user data. Here a [`useMemo`](https://reactjs.org/docs/hooks-reference.html#usememo) hook is used (This optimization helps to avoid expensive calculations on every render). 
 
-- Within the `login.jsx` page we'll call the hook `login` (thanks to `useLoginMutation` defined in apiSlice) and we'll set the result by the `setCredentials` hook. (And similar for logout). 
-
+- Within the `Login.jsx` page we'll call the hook `login` (thanks to `useLoginMutation` defined in apiSlice) and we'll set the result by the `setCredentials` hook. (And similar for logout). By using `unwrap()` on the mutation, we can access the error or success payload immediately after the mutation.
 
 
 
