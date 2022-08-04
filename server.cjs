@@ -21,7 +21,7 @@ app.get('/api', (req, res) => {
 })
 
 app.post('/api/login', (req,res) => {
-  const {user: username, password} = req.body;
+  const {username, password} = req.body;
   console.log(username,password)
   if (username === "andrea" && password === "12354") {
     const token = `sfs2345afaf53232a.fsfa2342fw2565a662fawef.few342342fafawef`;
@@ -36,6 +36,8 @@ app.post('/api/login', (req,res) => {
 });
 
 app.post('/api/logout', (req,res) => {
+  console.log("Goodbye!")
+
   res.cookie('__jwt_token', '', {maxAge: 0, httpOnly: true});
   res.status(201).json({
     message: `Goodbye!`

@@ -88,11 +88,11 @@ In the application, I defined a fake user (see above) and the API returns a fake
 
 - Add the slices: `apiSlice` and `userSlice`. The first one is used for API (hence the name), i.e. the `POST` calls for login and logout. The latter is used for storing the user data (username and token, in this example), thanks to the mutation called setCredentials. 
 
-- Add the `store.js`: set the two reducers (from apiSlice and from userReducer) and the middleware for apiSlice.middleware. Note that the "standard" Slice export directly the reduces (and separately the actions) while the apiSlice don't. 
+- Add the `store.js`: set the two reducers (from apiSlice and from userReducer) and the middleware for apiSlice.middleware. Note that the "standard" Slice directly exports the reducers (and separately the actions) while the apiSlice don't. 
 
 - Add the `<Provider store={store}>` to the `main.jsx` (wrapping the `<BrowserRouter>`). 
 
-- Define the hook `useAuth` for getting the user data. Here a [useMemo](https://reactjs.org/docs/hooks-reference.html#usememo) hook is used (This optimization helps to avoid expensive calculations on every render). 
+- Define the hook `useAuth` for getting the user data. Here a [`useMemo`](https://reactjs.org/docs/hooks-reference.html#usememo) hook is used (This optimization helps to avoid expensive calculations on every render). 
 
 - Within the `login.jsx` page we'll call the hook `login` (thanks to `useLoginMutation` defined in apiSlice) and we'll set the result by the `setCredentials` hook. (And similar for logout). 
 
@@ -103,6 +103,8 @@ In the application, I defined a fake user (see above) and the API returns a fake
 
 ## Final remarks
 For further details and examples, see the Redux/Redux Toolkit/RTKQuery/ documentation, and in particular [this example](https://redux-toolkit.js.org/rtk-query/usage/examples#authentication).
+
+If the server does not respond (or send an error status code), you can include some additional information to the response. See [here](https://redux-toolkit.js.org/rtk-query/usage/customizing-queries#adding-meta-information-to-queries) for more details.
 
 ### Folder structure
 In more complicated projects, file structure organization is very important in order to save every file in the "rigth place". Most Redux developers tend to use:

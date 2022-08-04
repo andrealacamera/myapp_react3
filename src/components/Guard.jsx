@@ -7,7 +7,7 @@ import { useAuth } from './useAuth';
 const Guard = () => {
   const auth = useAuth();
   console.log(auth)
-  return auth.user ? ( <Outlet /> ) : ( <Navigate to='/login' /> )
+  return auth.username ? ( <Outlet /> ) : ( <Navigate to='/login' /> )
 }
 
 export default Guard
