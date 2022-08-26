@@ -25,21 +25,43 @@ const Login = () => {
     e.preventDefault();
     if (username.length > 0 && password.length > 0) {
       console.log(username, password);
-      try {
-        const r = await login({username, password}).unwrap();
-        console.log(r);
+      login({username, password}).unwrap()
+      .then( (res) => {
+        console.log(res);
         dispatch(setCredentials({
           username,
-          token: r.token
+          token: res.token
         }));
         navigate('/');
-      } catch (error) {
-        setError("Error! Credentials not valid or server error...")
+      })
+      .catch( (error) => {
+        console.log(error);
+        if (error.status === 401) {
+          setError(`Error: ${error.data.message}`)
+        } else {
+          setError("Generic server error.")
+        }
+      })
       }
     }
 
+  const handleLogout = (e) => {
+    e.preventDefault();
+    logout().unwrap()
+    .then( (res) => {
+      console.log(res);
+      dispatch(setCredentials({
+        username: null,
+        token: null
+      }));
+      navigate('/welcome');
+    })
+    .catch( (error) => {
+      console.log(error)
+      setError(`Error on logout: ${error.status} - ${error.data}`)
+    });
   }
-
+  
 
   return (
     <div className='flex flex-col w-full bg-violet-200 justify-center m-auto h-auto max-w-[1200px] p-8'>
@@ -48,20 +70,7 @@ const Login = () => {
         <>
           <div className='flex flex-col mt-8'>
             <h2 className='text-2xl text-pink-800'>Welcome {user}!</h2>
-            <button className='bg-gray-800 py-4 px-8 rounded-xl text-gray-200' onClick={async () =>{
-              try {
-                const r = await logout().unwrap();
-                console.log(r)
-                dispatch(setCredentials({
-                  username: null,
-                  token: null
-                }));
-                navigate('/welcome');
-              } catch (error) {
-                setError('Error!')
-              }
-
-            } }>Logout</button>
+            <button className='bg-gray-800 py-4 px-8 rounded-xl text-gray-200' onClick={handleLogout}>Logout</button>
           </div>
         </>
       ) : (
